@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      # Defina a chave de XOR aqui ou via .env
+      XOR_KEY: "minha-chave-secreta"
+    tty: true

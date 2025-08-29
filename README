@@ -1,0 +1,69 @@
+# 🔐 XOR Crypto API – Node.js + C + Docker
+
+Pequeno projeto didático que combina **Node.js (TypeScript)**, **C** e **Docker** para demonstrar criptografia simétrica simples com **XOR**.
+
+> ⚠️ **Atenção:** XOR é apenas para fins de estudo. **Não use em produção** para proteger dados sensíveis.
+
+## 📂 Estrutura
+
+```
+.
+├── src/            # Código TypeScript (Express API)
+├── c/              # Código em C (binário xorbin)
+├── Dockerfile      # Build container
+├── docker-compose.yml
+├── package.json
+├── tsconfig.json
+└── ...
+```
+
+## ▶️ Rodando
+
+### 1. Buildar e subir com Docker Compose
+```bash
+docker compose build
+docker compose up -d
+```
+
+### 2. Verificar saúde
+```bash
+curl -s http://localhost:3000/health | jq
+```
+
+## 🔄 Uso da API
+
+### Criptografar
+```bash
+curl -s -X POST http://localhost:3000/xor   -H "Content-Type: application/json"   -d '{"data":"Ola Recife!","encoding":"utf8","output":"base64"}' | jq
+```
+
+### Descriptografar
+```bash
+CIPHER="<resultado_base64>"
+curl -s -X POST http://localhost:3000/xor   -H "Content-Type: application/json"   -d "{\"data\":\"$CIPHER\",\"encoding\":\"base64\",\"output\":\"utf8\"}" | jq
+```
+
+Saída esperada:
+```json
+{ "result": "Ola Recife!" }
+```
+
+## ⚙️ Variáveis de ambiente
+
+- `XOR_KEY` → chave secreta para cifrar/decifrar (definida no `docker-compose.yml`).
+
+## 📦 Endpoints
+
+- `GET /health` → status da API  
+- `POST /xor` → aplica XOR  
+  - **Body:**  
+    - `data` (string) → dados de entrada  
+    - `encoding` (opcional: `utf8` | `hex` | `base64`)  
+    - `output` (opcional: `utf8` | `hex` | `base64`)  
+
+## 🧹 Extras
+
+- `.gitignore` → evita subir `node_modules`, `dist`, etc.  
+- `.dockerignore` → evita copiar lixo pro container.  
+
+💡 **Dica:** se quiser brincar, altere a chave `XOR_KEY` no `docker-compose.yml` e teste novos resultados.
